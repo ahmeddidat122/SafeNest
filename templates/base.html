@@ -1,0 +1,329 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SafeNest - AI-Powered Smart Home & Architecture Platform{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/modals.css' %}" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1d3a 0%, #2d3561 50%, #1a1d3a 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: rgba(26, 29, 58, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: 70px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-dropdown-toggle:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            color: #00ffff;
+        }
+
+        .nav-dropdown-toggle i {
+            margin-right: 8px;
+        }
+
+        .nav-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(26, 29, 58, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 255, 255, 0.15);
+            padding: 15px 0;
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-dropdown:hover .nav-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-dropdown-item:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            color: #00ffff;
+            border-left-color: #00ffff;
+        }
+
+        .nav-dropdown-item i {
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            color: #00ffff;
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            color: #00ffff;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%);
+            color: white;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #00e6e6 0%, #7a25d1 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            min-height: calc(100vh - 70px);
+            padding: 0;
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #555;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-shield-alt"></i>
+                <span>SafeNest</span>
+            </a>
+            
+            <div class="nav-menu">
+                <!-- Smart Home IoT Dropdown -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">
+                        <i class="fas fa-home"></i>
+                        Smart Home
+                        <i class="fas fa-chevron-down" style="margin-left: 8px; font-size: 0.8rem;"></i>
+                    </a>
+                    <div class="nav-dropdown-menu">
+                        <a href="/devices/" class="nav-dropdown-item">
+                            <i class="fas fa-microchip"></i> Devices
+                        </a>
+                        <a href="/security/" class="nav-dropdown-item">
+                            <i class="fas fa-shield-alt"></i> Security
+                        </a>
+                        <a href="/energy/" class="nav-dropdown-item">
+                            <i class="fas fa-bolt"></i> Energy
+                        </a>
+                        <a href="/automation/" class="nav-dropdown-item">
+                            <i class="fas fa-cogs"></i> Automation
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- AI Architecture Dropdown -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">
+                        <i class="fas fa-cube"></i>
+                        AI Architecture
+                        <i class="fas fa-chevron-down" style="margin-left: 8px; font-size: 0.8rem;"></i>
+                    </a>
+                    <div class="nav-dropdown-menu">
+                        <a href="/architecture/" class="nav-dropdown-item">
+                            <i class="fas fa-magic"></i> AI Generator
+                        </a>
+                        <a href="/materials/" class="nav-dropdown-item">
+                            <i class="fas fa-calculator"></i> Materials
+                        </a>
+                        <a href="/architects/" class="nav-dropdown-item">
+                            <i class="fas fa-users"></i> Architects
+                        </a>
+                        <a href="/consultation/" class="nav-dropdown-item">
+                            <i class="fas fa-comments"></i> Consultation
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- AI Assistant -->
+                <a href="/ai/" class="nav-link">
+                    <i class="fas fa-robot"></i> AI Assistant
+                </a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-menu">
+                    <a href="/accounts/login/" class="btn btn-primary">Login</a>
+                </div>
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        // Initialize SafeNest functionality when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('SafeNest initialized successfully!');
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

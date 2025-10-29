@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}SafeNest Demo - AI Smart Home Assistant{% endblock %}
+
+{% block content %}
+<div style="padding: 40px 20px; max-width: 1400px; margin: 0 auto;">
+    <!-- Demo Header -->
+    <div style="text-align: center; margin-bottom: 60px; background: rgba(26, 29, 58, 0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 60px 40px; border: 1px solid rgba(0, 255, 255, 0.2);">
+        <h1 style="background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 20px; font-size: 3rem; font-weight: 700;">
+            <i class="fas fa-shield-alt" style="margin-right: 15px; background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+            SafeNest Demo
+        </h1>
+        <h2 style="color: rgba(255, 255, 255, 0.9); margin-bottom: 15px; font-size: 1.5rem; font-weight: 500;">
+            Experience AI-Powered Smart Home Control
+        </h2>
+        <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
+            Try our interactive demo to see how SafeNest revolutionizes home automation and security
+        </p>
+    </div>
+
+    <!-- Demo Features Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 50px;">
+        
+        <!-- AI Chatbot Demo -->
+        <div style="background: rgba(26, 29, 58, 0.8); border-radius: 20px; padding: 30px; border: 1px solid rgba(0, 255, 255, 0.2); backdrop-filter: blur(10px);">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <i class="fas fa-comments" style="font-size: 3rem; background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+                <h3 style="color: #00ffff; margin: 15px 0 10px 0; font-size: 1.4rem;">AI Assistant</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;">Chat with our intelligent AI assistant</p>
+            </div>
+            <div style="text-align: center;">
+                <a href="/ai/" style="background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; font-size: 16px; text-decoration: none; display: inline-block;">
+                    <i class="fas fa-robot" style="margin-right: 8px;"></i>
+                    Open AI Assistant
+                </a>
+            </div>
+        </div>
+
+        <!-- Smart Home Controls -->
+        <div style="background: rgba(26, 29, 58, 0.8); border-radius: 20px; padding: 30px; border: 1px solid rgba(0, 255, 255, 0.2); backdrop-filter: blur(10px);">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <i class="fas fa-home" style="font-size: 3rem; background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+                <h3 style="color: #00ffff; margin: 15px 0 10px 0; font-size: 1.4rem;">Smart Controls</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;">Control your smart home devices</p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button onclick="toggleAllLights()" style="background: rgba(255, 255, 255, 0.1); color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.3); padding: 12px 20px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-lightbulb" style="margin-right: 8px;"></i>
+                    Toggle Lights
+                </button>
+                <button onclick="activateSecurityMode()" style="background: rgba(255, 255, 255, 0.1); color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.3); padding: 12px 20px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-shield-alt" style="margin-right: 8px;"></i>
+                    Security Mode
+                </button>
+                <button onclick="adjustTemperature()" style="background: rgba(255, 255, 255, 0.1); color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.3); padding: 12px 20px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-thermometer-half" style="margin-right: 8px;"></i>
+                    Temperature
+                </button>
+            </div>
+        </div>
+
+        <!-- Voice Commands -->
+        <div style="background: rgba(26, 29, 58, 0.8); border-radius: 20px; padding: 30px; border: 1px solid rgba(0, 255, 255, 0.2); backdrop-filter: blur(10px);">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <i class="fas fa-microphone" style="font-size: 3rem; background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+                <h3 style="color: #00ffff; margin: 15px 0 10px 0; font-size: 1.4rem;">Voice Control</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 20px;">Use voice commands to control your home</p>
+            </div>
+            <div style="text-align: center;">
+                <button id="demoVoiceBtn" onclick="startVoiceDemo()" style="background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; font-size: 16px;">
+                    <i class="fas fa-microphone" style="margin-right: 8px;"></i>
+                    Try Voice Command
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Demo Instructions -->
+    <div style="background: rgba(26, 29, 58, 0.8); border-radius: 20px; padding: 40px; border: 1px solid rgba(0, 255, 255, 0.2); backdrop-filter: blur(10px); margin-bottom: 40px;">
+        <h3 style="color: #00ffff; text-align: center; margin-bottom: 30px; font-size: 1.8rem;">
+            <i class="fas fa-play-circle" style="margin-right: 10px;"></i>
+            How to Use the Demo
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <div style="text-align: center;">
+                <div style="background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: white; font-size: 1.5rem; font-weight: bold;">1</div>
+                <h4 style="color: white; margin-bottom: 10px;">Visit AI Assistant</h4>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Navigate to the AI Assistant page and try asking about lights, security, or temperature.</p>
+            </div>
+            
+            <div style="text-align: center;">
+                <div style="background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: white; font-size: 1.5rem; font-weight: bold;">2</div>
+                <h4 style="color: white; margin-bottom: 10px;">Test Smart Controls</h4>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Use the control buttons to simulate smart home device interactions and see real-time feedback.</p>
+            </div>
+            
+            <div style="text-align: center;">
+                <div style="background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: white; font-size: 1.5rem; font-weight: bold;">3</div>
+                <h4 style="color: white; margin-bottom: 10px;">Try Voice Commands</h4>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Use voice commands like "Turn on the lights" or "Check security status" for hands-free control.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Commands -->
+    <div style="background: rgba(26, 29, 58, 0.8); border-radius: 20px; padding: 40px; border: 1px solid rgba(0, 255, 255, 0.2); backdrop-filter: blur(10px);">
+        <h3 style="color: #00ffff; text-align: center; margin-bottom: 30px; font-size: 1.8rem;">
+            <i class="fas fa-lightbulb" style="margin-right: 10px;"></i>
+            Try These Sample Commands
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div>
+                <h4 style="color: white; margin-bottom: 15px;">💡 Lighting Control</h4>
+                <ul style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                    <li>"Turn on all lights"</li>
+                    <li>"Turn off the bedroom lights"</li>
+                    <li>"Dim the living room lights"</li>
+                    <li>"Set mood lighting"</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 style="color: white; margin-bottom: 15px;">🔒 Security & Safety</h4>
+                <ul style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                    <li>"Check security status"</li>
+                    <li>"Arm the alarm system"</li>
+                    <li>"Show camera feeds"</li>
+                    <li>"Lock all doors"</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 style="color: white; margin-bottom: 15px;">🌡️ Climate Control</h4>
+                <ul style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                    <li>"Set temperature to 22 degrees"</li>
+                    <li>"What's the current temperature?"</li>
+                    <li>"Turn on the air conditioning"</li>
+                    <li>"Optimize energy usage"</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 style="color: white; margin-bottom: 15px;">🏗️ Architecture Help</h4>
+                <ul style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                    <li>"Design a modern kitchen"</li>
+                    <li>"Show me floor plan options"</li>
+                    <li>"Recommend materials"</li>
+                    <li>"Calculate room dimensions"</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Demo-specific functions
+function startVoiceDemo() {
+    const btn = document.getElementById('demoVoiceBtn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>Listening...';
+    btn.style.background = '#ff4444';
+    
+    // Simulate voice recognition
+    setTimeout(() => {
+        showNotification('Voice command: "Turn on the lights"', 'info');
+        setTimeout(() => {
+            toggleAllLights();
+            btn.innerHTML = '<i class="fas fa-microphone" style="margin-right: 8px;"></i>Try Voice Command';
+            btn.style.background = 'linear-gradient(135deg, #00ffff 0%, #8a2be2 100%)';
+        }, 1000);
+    }, 2000);
+}
+
+// Show AI assistant notification for demo
+setTimeout(() => {
+    showNotification('💬 Try our AI assistant! Click "AI Assistant" in the navigation menu.', 'info');
+}, 3000);
+</script>
+{% endblock %}

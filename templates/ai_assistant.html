@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Assistant - SafeNest Smart Home{% endblock %}
+
+{% block content %}
+<div id="ai-assistant-container" style="padding: 20px; max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 70px);">
+    
+    <!-- AI Assistant Header -->
+    <div style="text-align: center; margin-bottom: 40px; background: rgba(26, 29, 58, 0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; border: 1px solid rgba(0, 255, 255, 0.2);">
+        <h1 style="background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 15px; font-size: 2.5rem; font-weight: 700;">
+            <i class="fas fa-shield-alt" style="margin-right: 15px; background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+            SafeNest AI Assistant
+        </h1>
+        <p style="color: rgba(255, 255, 255, 0.9); font-size: 1.2rem; margin-bottom: 20px;">
+            Your intelligent companion for smart home control and architectural design
+        </p>
+        <div style="background: rgba(0, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 10px; padding: 10px; margin-top: 15px; display: inline-block;">
+            <span style="color: #00ffff; font-size: 0.9rem;">
+                <i class="fas fa-brain" style="margin-right: 5px;"></i>
+                Powered by GLM-4.5-air (Free AI Model)
+            </span>
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px;">
+            <div style="display: flex; align-items: center; gap: 8px; color: #00ff00;">
+                <span style="width: 10px; height: 10px; background: #00ff00; border-radius: 50%; animation: pulse 2s infinite;"></span>
+                <span style="font-size: 0.9rem;">AI Online</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; color: #00ffff;">
+                <i class="fas fa-microphone" style="font-size: 0.9rem;"></i>
+                <span style="font-size: 0.9rem;">Voice Enabled</span>
+            </div>
+            <div id="openrouter-status" style="display: flex; align-items: center; gap: 8px; color: #ffa500;">
+                <i class="fas fa-brain" style="font-size: 0.9rem;"></i>
+                <span style="font-size: 0.9rem;">OpenRouter AI</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+        
+        <!-- Chat Messages Area -->
+        <div style="background: rgba(26, 29, 58, 0.8); border-radius: 20px; border: 1px solid rgba(0, 255, 255, 0.2); backdrop-filter: blur(10px); overflow: hidden;">
+            
+            <!-- Chat Header -->
+            <div style="background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); padding: 20px; color: white;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.3rem; font-weight: 600;">Chat with AI Assistant</h3>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9;">Ask me anything about your smart home or architecture needs</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="clearChat()" style="background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem;">
+                            <i class="fas fa-trash" style="margin-right: 5px;"></i>Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Messages Container -->
+            <div id="chatMessages" style="height: 500px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            
+            <!-- Chat Input Area -->
+            <div style="padding: 20px; border-top: 1px solid rgba(0, 255, 255, 0.2);">
+                <div style="display: flex; gap: 10px; align-items: center; background: rgba(255, 255, 255, 0.1); border-radius: 25px; padding: 5px;">
+                    <input type="text" id="chatInput" placeholder="Type your message here... (e.g., 'Turn on the lights' or 'Design a modern kitchen')" 
+                           style="flex: 1; background: none; border: none; color: white; padding: 15px 20px; font-size: 14px; outline: none;">
+                    <button id="voiceBtn" style="width: 45px; height: 45px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.1); color: #00ffff; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button onclick="sendMessage()" style="width: 45px; height: 45px; border-radius: 50%; border: none; background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%); color: white; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <!-- Quick Action Buttons -->
+                <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                    <button onclick="quickAction('lights')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); color: #00ffff; padding: 8px 15px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-lightbulb"></i> Toggle Lights
+                    </button>
+                    <button onclick="quickAction('security')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); color: #00ffff; padding: 8px 15px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-shield-alt"></i> Security Status
+                    </button>
+                    <button onclick="quickAction('temperature')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); color: #00ffff; padding: 8px 15px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-thermometer-half"></i> Temperature
+                    </button>
+                    <button onclick="quickAction('energy')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); color: #00ffff; padding: 8px 15px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-bolt"></i> Energy Status
+                    </button>
+                    <button onclick="quickAction('design')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); color: #00ffff; padding: 8px 15px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-drafting-compass"></i> Design Help
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Capabilities Info -->
+    <div style="margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        
+        <div style="background: rgba(26, 29, 58, 0.8); border-radius: 15px; padding: 25px; border: 1px solid rgba(0, 255, 255, 0.2); backdrop-filter: blur(10px);">
+            <h4 style="color: #00ffff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-home"></i> Smart Home Control
+            </h4>
+            <ul style="color: rgba(255, 255, 255, 0.8); line-height: 1.8; margin: 0; padding-left: 20px;">
+                <li>Control lights, temperature, and devices</li>
+                <li>Monitor energy usage and optimization</li>
+                <li>Manage security systems and alerts</li>
+                <li>Set up automated routines</li>
+            </ul>
+        </div>
+
+        <div style="background: rgba(26, 29, 58, 0.8); border-radius: 15px; padding: 25px; border: 1px solid rgba(0, 255, 255, 0.2); backdrop-filter: blur(10px);">
+            <h4 style="color: #00ffff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-drafting-compass"></i> Architecture & Design
+            </h4>
+            <ul style="color: rgba(255, 255, 255, 0.8); line-height: 1.8; margin: 0; padding-left: 20px;">
+                <li>Generate floor plans and 3D models</li>
+                <li>Recommend materials and layouts</li>
+                <li>Building code compliance assistance</li>
+                <li>Cost estimation and planning</li>
+            </ul>
+        </div>
+
+        <div style="background: rgba(26, 29, 58, 0.8); border-radius: 15px; padding: 25px; border: 1px solid rgba(0, 255, 255, 0.2); backdrop-filter: blur(10px);">
+            <h4 style="color: #00ffff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-robot"></i> AI Features
+            </h4>
+            <ul style="color: rgba(255, 255, 255, 0.8); line-height: 1.8; margin: 0; padding-left: 20px;">
+                <li>Natural language processing</li>
+                <li>Voice command recognition</li>
+                <li>Predictive analytics</li>
+                <li>Personalized recommendations</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+/* AI Assistant specific styles */
+.message {
+    display: flex;
+    gap: 12px;
+    animation: messageSlide 0.3s ease-out;
+    max-width: 100%;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-message {
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.bot-message .message-avatar {
+    background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%);
+    color: white;
+}
+
+.user-message .message-avatar {
+    background: rgba(255, 255, 255, 0.1);
+    color: #00ffff;
+}
+
+.message-content {
+    max-width: 80%;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+    border-radius: 20px;
+    color: white;
+    line-height: 1.5;
+}
+
+.user-message .message-content {
+    background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%);
+    border-radius: 20px 20px 5px 20px;
+}
+
+.bot-message .message-content {
+    border-radius: 20px 20px 20px 5px;
+}
+
+.message-time {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    display: block;
+    margin-top: 8px;
+}
+
+.typing-indicator .message-content {
+    padding: 15px 20px;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.typing-dots span {
+    width: 8px;
+    height: 8px;
+    background: #00ffff;
+    border-radius: 50%;
+    animation: typingDot 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingDot {
+    0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#chatInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#voiceBtn:hover {
+    background: rgba(0, 255, 255, 0.2) !important;
+    transform: scale(1.1);
+}
+
+#voiceBtn.listening {
+    background: #ff4444 !important;
+    color: white !important;
+    animation: pulse 1s infinite;
+}
+
+.quick-actions button:hover {
+    background: rgba(0, 255, 255, 0.2) !important;
+    transform: translateY(-2px);
+}
+
+/* Scrollbar styling */
+#chatMessages::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chatMessages::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+#chatMessages::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #00ffff 0%, #8a2be2 100%);
+    border-radius: 3px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .message-content {
+        max-width: 90%;
+    }
+    
+    #chatInput {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
+</style>
+
+<script>
+// Clear chat function
+function clearChat() {
+    const messagesContainer = document.getElementById('chatMessages');
+    if (messagesContainer) {
+        messagesContainer.innerHTML = '';
+        chatHistory = [];
+        addWelcomeMessage();
+        showNotification('Chat cleared', 'info');
+    }
+}
+
+// Check OpenRouter status
+function checkOpenRouterStatus() {
+    fetch('/api/ai/status/')
+        .then(response => response.json())
+        .then(data => {
+            const statusElement = document.getElementById('openrouter-status');
+            if (data.openrouter_available) {
+                statusElement.style.color = '#00ff00';
+                statusElement.innerHTML = '<i class="fas fa-brain" style="font-size: 0.9rem;"></i><span style="font-size: 0.9rem;">OpenRouter Active</span>';
+            } else {
+                statusElement.style.color = '#ffa500';
+                statusElement.innerHTML = '<i class="fas fa-exclamation-triangle" style="font-size: 0.9rem;"></i><span style="font-size: 0.9rem;">Local AI Mode</span>';
+            }
+        })
+        .catch(error => {
+            console.log('Status check failed:', error);
+            const statusElement = document.getElementById('openrouter-status');
+            statusElement.style.color = '#ff4444';
+            statusElement.innerHTML = '<i class="fas fa-times" style="font-size: 0.9rem;"></i><span style="font-size: 0.9rem;">AI Offline</span>';
+        });
+}
+
+// Focus on input when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        focusChatInput();
+        checkOpenRouterStatus();
+    }, 500);
+});
+</script>
+{% endblock %}
