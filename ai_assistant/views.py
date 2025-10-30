@@ -13,6 +13,51 @@ def ai_chat(request):
     }
     return render(request, 'ai_assistant.html', context)
 
+def ai_tools(request):
+    """AI tools interface"""
+    context = {
+        'title': 'AI Tools - SafeNest',
+        'tools': [
+            {
+                'name': 'Smart Home Designer',
+                'description': 'AI-powered room layout and design assistant',
+                'icon': 'fas fa-home',
+                'features': ['Room layout optimization', 'Furniture placement', 'Lighting design', 'Color scheme suggestions']
+            },
+            {
+                'name': 'Energy Optimizer',
+                'description': 'AI-driven energy efficiency analysis and recommendations',
+                'icon': 'fas fa-leaf',
+                'features': ['Energy usage analysis', 'Cost optimization', 'Carbon footprint tracking', 'Smart scheduling']
+            },
+            {
+                'name': 'Security Analyzer',
+                'description': 'AI-powered security system optimization and threat detection',
+                'icon': 'fas fa-shield-alt',
+                'features': ['Vulnerability assessment', 'Camera optimization', 'Motion detection', 'Alert system']
+            },
+            {
+                'name': 'Voice Assistant',
+                'description': 'Advanced voice control for all smart home features',
+                'icon': 'fas fa-microphone',
+                'features': ['Natural language processing', 'Voice commands', 'Custom routines', 'Multi-room control']
+            },
+            {
+                'name': 'Predictive Analytics',
+                'description': 'AI-powered predictions for maintenance and usage patterns',
+                'icon': 'fas fa-chart-line',
+                'features': ['Usage forecasting', 'Maintenance alerts', 'Cost predictions', 'Efficiency insights']
+            },
+            {
+                'name': 'Automation Builder',
+                'description': 'Visual AI-powered automation workflow creator',
+                'icon': 'fas fa-robot',
+                'features': ['Drag-and-drop interface', 'AI suggestions', 'Trigger creation', 'Rule optimization']
+            }
+        ]
+    }
+    return render(request, 'ai_assistant/tools.html', context)
+
 def ai_commands(request):
     """AI commands interface"""
     context = {
